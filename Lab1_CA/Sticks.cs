@@ -8,48 +8,109 @@ namespace Lab1_CA
 {
     class Sticks
     {
-        //массив со всеми палками
-        private double[] all_sticks;
+        //лист со всеми палками
+        private List<int> all_sticks;
+        //количество элементов в листе
+        private int N;
         //количество ребер/углов, которое нужно получить
-        private int m;
+        private int cnt_angles;
+        //текущая длина стороны
+        private int len_side = 0;
 
         //конструктор
-        public Sticks(List<double> sticks_in,int m_in)
+        public Sticks(List<int> sticks_in, int m_in)
         {
-            all_sticks = sticks_in.ToArray();
-            m = m_in;
+            all_sticks = sticks_in;
+            all_sticks.Sort();
+            cnt_angles = m_in;
+            N = all_sticks.Count;
+        }
+
+        //следующая перестановка
+        bool NextSet()
+        {
+            int j = N - 2;
+            while (j != -1 && all_sticks[j] >= all_sticks[j + 1]) j--;
+            if (j == -1)
+                return false; // больше перестановок нет
+            int k = N - 1;
+            while (all_sticks[j] >= all_sticks[k]) k--;
+
+            int tmp = all_sticks[j];
+            all_sticks[j] = all_sticks[k];
+            all_sticks[k] = tmp;
+
+            // сортируем оставшуюся часть последовательности
+            int l = j + 1, r = N - 1;
+            while (l < r)
+            {
+                tmp = all_sticks[l];
+                all_sticks[l] = all_sticks[r];
+                all_sticks[r] = tmp;
+                l++;
+                r--;
+            }
+            return true;
+        }
+
+        //Проверка для текущей перестановки текущей длины стороны
+        bool CheckCurrent(List<int> per, int len)
+        {
+            len_side = len;
+            int last_sum = 0;
+            int cnt = 0;
+            for (int i = 0; i < per.Count; i++)
+            {
+                if (last_sum + per[i] > len)
+                    return false;
+                if (last_sum + per[i] == len)
+                {
+                    cnt++;
+                    if (cnt == cnt_angles)
+                        return true;
+                    last_sum = 0;
+                }
+                else
+                {
+                    last_sum += per[i];
+                }
+                i++;
+            }
+            return false;
+        }
+
+        //метод поиска
+        public bool Find()
+        {
+            //Сумма длин всех звеньев
+            int sum = 0;
+            foreach (int num in all_sticks)
+            {
+                sum += num;
+            }
+            //среднее арифметическое палочек=максимальная длина стороны
+            int max = sum / cnt_angles;
+            do
+            {
+                for (int i = 1; i <= max; i++)
+                {
+                    if (CheckCurrent(all_sticks, i))
+                        return true;
+                }
+
+            } while (NextSet());
+            for (int i = 1; i <= max; i++)
+            {
+                if (CheckCurrent(all_sticks, i))
+                    return true;
+            }
+            return false;
         }
 
         //возвращает текстом те палочки, из которых можно составить правильный m угольник
-        public string Check()
+        public string ResToStr()
         {
-            //Итоговая строка
-            StringBuilder stBuild = new StringBuilder();
-            //Проверяемое значение
-            double cur_val;
-            //Количество появлений данной переменной
-            int cnt;
-            for (int i = 0; i < all_sticks.Length; i++)
-            {
-                cnt = 1;
-                if (all_sticks[i] != 0) {
-                    cur_val = all_sticks[i];
-                    for (int j = i + 1; j < all_sticks.Length; j++)
-                    {
-                        if (cur_val == all_sticks[j])
-                            cnt++;
-                    }
-                    if (cnt >= m) {
-                        for (int k = 0; k < m; k++)
-                        {
-                            stBuild.Append(cur_val.ToString() + ' ');
-                        }
-                        stBuild.Append(" Perimeter: " + (cur_val * m).ToString() + '\n');
-                    }
-                }
-            }
-            
-            return stBuild.ToString();
+            return null; //заглушка
         }
     }
 }

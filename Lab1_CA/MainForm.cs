@@ -22,7 +22,7 @@ namespace Lab1_CA
             string str = textBox.Text;
             string[] temp = str.Split(' ');
             int m;
-            List<double> in_sticks = new List<double>();
+            List<int> in_sticks = new List<int>();
             try
             {
                 foreach (string num in temp)
@@ -33,11 +33,14 @@ namespace Lab1_CA
                 if (m < 3)
                     throw new Exception("Error");
                 Sticks st = new Sticks(in_sticks, m);
-                String result = st.Check().Trim();
-                if (result.Length == 0)
-                    MessageBox.Show("You cannot build a regular polygon from this data.", "Message");
+                if (st.Find())
+                {
+                    MessageBox.Show("Combination found:\n" + st.ResToStr(), "Message");
+                }
                 else
-                    MessageBox.Show("Combinations:\n" + result, "Message");
+                {
+                    MessageBox.Show("You cannot build a regular polygon from this data.", "Message");
+                }
             }
             catch (Exception exept)
             {
