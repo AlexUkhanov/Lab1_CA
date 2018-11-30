@@ -74,7 +74,6 @@ namespace Lab1_CA
                 {
                     last_sum += per[i];
                 }
-                i++;
             }
             return false;
         }
@@ -106,11 +105,33 @@ namespace Lab1_CA
             }
             return false;
         }
-
-        //возвращает текстом те палочки, из которых можно составить правильный m угольник
+        //возвращает результат в строке
         public string ResToStr()
         {
-            return null; //заглушка
+            List<int> lastSide = new List<int>();
+            int lastSideVal = 0;
+            int n = 0;
+            StringBuilder result = new StringBuilder();
+            foreach (int el in all_sticks)
+            {
+                lastSide.Add(el);
+                lastSideVal += el;
+                if (lastSideVal==len_side)
+                {
+                    lastSideVal = 0;
+                    result.Append(string.Join<int>("+", lastSide));
+                    lastSide = new List<int>();
+                    n++;
+                    if (n != cnt_angles)
+                    {
+                        result.Append(',');
+
+                    }
+                    else
+                        break;
+                }
+            }
+            return result.ToString();
         }
     }
 }

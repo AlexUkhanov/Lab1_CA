@@ -19,7 +19,7 @@ namespace Lab1_CA
 
         private void btCheck_Click(object sender, EventArgs e)
         {
-            string str = textBox.Text;
+            string str = textBox.Text.Trim();
             string[] temp = str.Split(' ');
             int m;
             List<int> in_sticks = new List<int>();
@@ -27,7 +27,7 @@ namespace Lab1_CA
             {
                 foreach (string num in temp)
                 {
-                    in_sticks.Add(Convert.ToDouble(num));
+                    in_sticks.Add(Convert.ToInt32(num));
                 }
                 m = Convert.ToInt32(tbInM.Text);
                 if (m < 3)
